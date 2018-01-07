@@ -11,12 +11,15 @@ const Button = styled.button`
 
 export default function AnswerButton(props)  {
 	return (
-		<Button value={props.outcome} onClick={() => props.onClick()}>
+		<Button value={props.answer} onClick={props.onClick}>
 			{props.answer}
 		</Button>
 	);
 }
 
 AnswerButton.propTypes = {
-  answer: PropTypes.number,
+  answer: PropTypes.oneOfType([
+	  PropTypes.string,
+	  PropTypes.number
+	]),
 }

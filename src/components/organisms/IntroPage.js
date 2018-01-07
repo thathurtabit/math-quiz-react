@@ -21,7 +21,7 @@ export default function IntroPage(props) {
       <IntroPageContent>
         {props.content}
       </IntroPageContent>
-      <NextButton buttonText={props.buttonText} onClick={() => props.onClick()} />
+      <NextButton buttonText={props.buttonText} onClick={props.onClick} />
     </IntroPageWrap>
   );
 }

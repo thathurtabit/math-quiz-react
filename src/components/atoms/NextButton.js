@@ -11,7 +11,7 @@ const Button = styled.button`
 
 export default function NextButton(props)  {
 	return (
-		<Button onClick={() => props.onClick()}>
+		<Button onClick={props.onClick}>
 			{props.buttonText}
 		</Button>
 	);
