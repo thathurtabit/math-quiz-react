@@ -147,7 +147,9 @@ class App extends Component {
 
   // Check for duplicate answers
   checkForDuplicates(lastAnswer, number) {
-    let tweakVal = 2;
+    const getRandomInt = (minVal, maxVal) => Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+    let tweakVal = getRandomInt(1,3);
+    console.log(tweakVal);
     if (lastAnswer !== number) {
       return number;
     } else {
@@ -180,8 +182,8 @@ class App extends Component {
     let valueA = this.state.questionValueA;
     let operator = this.state.questionOperator;
     let valueB = this.state.questionValueB;
-    let minVal = 3;
-    let maxVal = 8;
+    let minVal = 1;
+    let maxVal = 5;
     let answersArray = [];
     // Required because the operator is currently a string
     let operatorFunctions = {
@@ -193,9 +195,8 @@ class App extends Component {
 
     // Check they're not the same values
     let answer1 = operatorFunctions[operator](valueA, valueB);
-    let answer2 = this.checkForDuplicates(answer1, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueA));
-    let answer3 = this.checkForDuplicates(answer2, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueB));
-
+    let answer2 = this.checkForDuplicates(answer1, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueB));
+    let answer3 = this.checkForDuplicates(answer2, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueA));
 
     // Push the answers to an array so we can shuffle
     answersArray.push(answer1, answer2, answer3);
