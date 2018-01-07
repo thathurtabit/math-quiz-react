@@ -9,14 +9,14 @@ const Button = styled.button`
   color: palevioletred;
 `;
 
-export default function AnswerButton(props)  {
+export default function NextButton(props)  {
 	return (
-		<Button value={props.outcome} onClick={() => props.onClick()}>
-			{props.answer}
+		<Button onClick={() => props.onClick()}>
+			{props.buttonText}
 		</Button>
 	);
 }
 
-AnswerButton.propTypes = {
-  answer: PropTypes.number,
+NextButton.propTypes = {
+  answer: PropTypes.string,
 }
