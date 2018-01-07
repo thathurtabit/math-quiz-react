@@ -7,12 +7,17 @@ const QuestionWrap = styled.p`
   margin: 2rem 1rem 0;
   text-align: center;
   color: palevioletred;
+
+  span {
+  	background: rgba(0,0,0,0.03);
+  	padding: 3px 5px;
+  }
 `;
 
 export default function Question(props)  {
 	return (
 		<QuestionWrap>
-			{props.questionText} {props.valueA} {props.operator} {props.valueB} ?
+			{props.questionText} <span>{props.valueA} {props.operator} {props.valueB}</span>?
 		</QuestionWrap>
 	);
 }

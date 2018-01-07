@@ -106,7 +106,6 @@ class App extends Component {
       outcome3: false,
       answerScore: 0,
       totalTimeToDeduct: 0,
-      totalScore: 0,
     }
 
     this.jumpTo = this.jumpTo.bind(this);
@@ -146,6 +145,15 @@ class App extends Component {
     return array;
   }
 
+  // Check for duplicate answers
+  checkForDuplicates(lastAnswer, number) {
+    let tweakVal = 2;
+    if (lastAnswer !== number) {
+      return number;
+    } else {
+      return number + tweakVal;
+    }
+  };
 
   generateQuestionValues(event) {
     let minQuestionVal = this.state.questionValueMin;
@@ -154,7 +162,7 @@ class App extends Component {
     const getRandomInt = (minVal, maxVal) => Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
     const getRandomOperator = (array) => array[Math.floor(Math.random() * array.length)];
     let valueA = getRandomInt(minQuestionVal, maxQuestionVal);
-    let valueB = getRandomInt(minQuestionVal, maxQuestionVal);
+    let valueB = this.checkForDuplicates(valueA, getRandomInt(minQuestionVal, maxQuestionVal));
     let operator = getRandomOperator(operatorsArray);
 
     // Set those values
@@ -166,16 +174,6 @@ class App extends Component {
       this.generateAnswerValues(event);
     });
   }
-
-  // Check for duplicate answers
-  checkForDuplicates(lastAnswer, number) {
-    let tweakVal = 2;
-    if (lastAnswer !== number) {
-      return number;
-    } else {
-      return number + tweakVal;
-    }
-  };
 
   generateAnswerValues(event) {
     const getRandomInt = (minVal, maxVal) => Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
@@ -189,7 +187,7 @@ class App extends Component {
     let operatorFunctions = {
       '+': (a, b) => (a + b),
       '-': (a, b) => (a - b),
-      '/': (a, b) => (a / b).toFixed(4),
+      '/': (a, b) => (a / b).toFixed(2),
       '*': (a, b) => (a * b),
     };
 
@@ -216,7 +214,7 @@ class App extends Component {
 
     // Set those values
     this.setState({
-      correctAnswer: answer1,
+      correctAnswer: Number(answer1),
       answer1: answersArray[0],
       answer2: answersArray[1],
       answer3: answersArray[2],
@@ -227,7 +225,18 @@ class App extends Component {
   }
 
   handleSelectedValue(event) {
-    console.log(`User's last answer was: ${event.currentTarget.value} | Actual answer was: ${this.state.correctAnswer}`)
+    let userAnswer = Number(event.currentTarget.value);
+    let addPoint = this.state.answerScore;
+    addPoint += 1; //iterate
+
+    console.log(`User's last answer was: ${userAnswer} : ${typeof(userAnswer)} | Actual answer was: ${this.state.correctAnswer} : ${typeof(this.state.correctAnswer)}`);
+
+    if (userAnswer === Number(this.state.correctAnswer)) {
+      console.log('DIRECT HIT');
+      this.setState({
+        answerScore: addPoint,
+      });
+    }
   }
 
  // Next button
@@ -342,7 +351,6 @@ class App extends Component {
             instruction: 'Select your answer before the timer runs out',
             answerScore: 0,
             totalTimeToDeduct: 0,
-            totalScore: 0,
           }, () => {
             // Unselect answers
             //this.unSelectAnswers();
@@ -388,6 +396,8 @@ class App extends Component {
           <ResultsPage
             display={this.state.showResults}
             content={this.state.pageText}
+            score={this.state.answerScore}
+            outOf={this.state.questionsTotal}
             buttonText={this.state.pageButtonText}
             onClick={this.reset}
           />

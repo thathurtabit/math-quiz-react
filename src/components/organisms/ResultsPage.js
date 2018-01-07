@@ -19,7 +19,8 @@ export default function ResultsPage(props) {
   return (
     <ResultsPageWrap style={{display: props.display ? 'block' : 'none'}}>
       <ResultsPageContent>
-        {props.content}
+        <p>{props.content}</p>
+        <p>{props.score} out of {props.outOf}</p>
       </ResultsPageContent>
       <NextButton buttonText={props.buttonText} onClick={() => props.onClick()} />
     </ResultsPageWrap>
