@@ -4,13 +4,18 @@ import { CSSTransition } from 'react-transition-group';
 import IntroPage from '../organisms/IntroPage';
 import Question from '../atoms/Question';
 import AnswerButton from '../atoms/AnswerButton';
+import Timer from '../molecules/Timer';
 import ResultsPage from '../organisms/ResultsPage';
 
 const Wrapper = styled.section`
-  font-family: 'Roboto Condensed', sans-serif;
-  font-size: 1.3em;
-  text-align: center;
+  align-items: center;
   color: palevioletred;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.3em;
+  justify-content: center;
+  text-align: center;
 
   &.fade-enter {
     opacity: 0.01;
@@ -40,11 +45,12 @@ const Quiz = styled.section`
 `;
 
 const SiteHeader = styled.header`
-  font-size: 1.3rem;
+  font-size: 1.5rem;
 `;
 
 const SiteTitle = styled.h1`
-  font-size: 2rem;
+  font-size: 2.5rem;
+  font-family: 'Fjalla One', sans-serif;
 `;
 
 const AnswerWrap = styled.section`
@@ -96,6 +102,10 @@ class App extends Component {
       questionValueB: 0,
       questionValueMin: 3,
       questionValueMax: 10,
+      questionTimeOut: 10000,
+      timerText: 'Time until next question...',
+      timerCurrent: 10,
+      timerRemaining: 10,
       instruction: 'Select your answer before the timer runs out',
       correctAnswer: 1,
       answer1: 1,
@@ -219,11 +229,34 @@ class App extends Component {
       answer1: answersArray[0],
       answer2: answersArray[1],
       answer3: answersArray[2],
-    }, () => {
-      console.log(`The correct answer of ${valueA} ${operator} ${valueB} is: ${this.state.correctAnswer}`);
     });
 
   }
+
+  // Start countdown to next question...
+  startCountdown() {
+    console.log("COUNTDOWN STARTED");
+
+    let timeLeft = this.state.timerRemaining;
+    let timeCurrent = this.state.timerCurrent;
+
+    const questionTimer = setInterval(() => {
+      
+      timeCurrent = timeCurrent - --timeLeft;
+
+      this.setState({timerCurrent: timeCurrent});
+
+      if(timeLeft <= 0)
+        clearInterval(questionTimer);
+    }, 1000);
+
+    setTimeout(() => {
+        
+      console.log("TIME IS UP");
+
+    }, this.state.questionTimeOut); 
+  }
+
 
   handleSelectedValue(event) {
     let userAnswer = Number(event.currentTarget.value);
@@ -263,6 +296,8 @@ class App extends Component {
             showQuiz: !this.state.showQuiz,
             currentPage: currentPage,
             
+          }, () => {
+            this.startCountdown();
           });
 
         }, duration);
@@ -287,6 +322,8 @@ class App extends Component {
             show: !this.state.show,
             currentPage: currentPage,
             
+          }, () => {
+            this.startCountdown();
           });
 
         }, duration);
@@ -392,6 +429,9 @@ class App extends Component {
               <AnswerButton answer={this.state.answer2} outcome={this.state.outcome2} onClick={this.jumpTo} />
               <AnswerButton answer={this.state.answer3} outcome={this.state.outcome3} onClick={this.jumpTo} />
             </AnswerWrap>
+
+            <Timer timerText={this.state.timerText} timerCurrent={this.state.timerCurrent} timerRemaining={this.state.timerRemaining} />
+
           </Quiz>
 
           <ResultsPage

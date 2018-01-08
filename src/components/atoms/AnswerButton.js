@@ -8,6 +8,7 @@ const Button = styled.button`
 	border: 0;
 	color: palevioletred;
 	font-size: 1.5em;
+	font-family: 'Fjalla One', sans-serif;
 	height: 80px;
 	line-height: 80px;
 	margin: 2rem 1rem 0;
