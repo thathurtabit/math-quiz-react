@@ -7,7 +7,6 @@ const ResultsPageWrap = styled.section`
   font-size: 1rem;
   margin: 2rem 1rem 0;
   text-align: center;
-  color: palevioletred;
 `;
 
 const ResultsPageContent = styled.article`

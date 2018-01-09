@@ -3,11 +3,9 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const QuestionWrap = styled.p`
-	font-family: 'Fjalla One', sans-serif;
-  font-size: 1.5em;
+  font-size: 2rem;
   margin: 2rem 1rem 0;
   text-align: center;
-  color: palevioletred;
 
   span {
   	background: rgba(0,0,0,0.03);

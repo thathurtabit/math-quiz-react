@@ -3,29 +3,29 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const Button = styled.button`
-	background: rgba(0,0,0,0.05);
+	background: #444;
 	border-radius: 100%;
 	border: 0;
-	color: palevioletred;
-	font-size: 1.5em;
-	font-family: 'Fjalla One', sans-serif;
-	height: 80px;
-	line-height: 80px;
+	color: #FDB802;;
+	font-size: 1.75em;
+	height: 90px;
+	line-height: 90px;
 	margin: 2rem 1rem 0;
 	padding: 0;
 	text-align: center;
-	width: 80px;
+	transform: scale(1);
+	width: 90px;
 
   &:hover,
   &:focus {
-    background: rgba(0,0,0,0.1);
+    background: #333;
     cursor: pointer;
     outline: 0;
   }
 
   &:active {
-    background: palevioletred;
-    color: #fff;
+  	background: #222;
+    transform: scale(0.9);
   }
 `;
 

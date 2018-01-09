@@ -7,12 +7,15 @@ import AnswerButton from '../atoms/AnswerButton';
 import Timer from '../molecules/Timer';
 import ResultsPage from '../organisms/ResultsPage';
 
+const SiteWrapper = styled.section`
+  font-family: 'Montserrat', sans-serif;
+  padding: 0;
+`;
+
 const Wrapper = styled.section`
   align-items: center;
-  color: palevioletred;
   display: flex;
   flex-direction: column;
-  font-family: 'Open Sans', sans-serif;
   font-size: 1.3em;
   justify-content: center;
   text-align: center;
@@ -46,11 +49,15 @@ const Quiz = styled.section`
 
 const SiteHeader = styled.header`
   font-size: 1.5rem;
+  left: 50%;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  transform: translateX(-50%);
 `;
 
 const SiteTitle = styled.h1`
   font-size: 2.5rem;
-  font-family: 'Fjalla One', sans-serif;
 `;
 
 const AnswerWrap = styled.section`
@@ -62,8 +69,11 @@ const SiteIntro = styled.h2`
 `;
 
 const QuizRound = styled.p`
+  border-radius: 20px;
   font-size: 0.75rem;
-  color: #999;
+  color: #fff;
+  background: rgba(0,0,0,0.2);
+  padding: 5px 10px;
 `;
 
 const duration = 300;
@@ -405,9 +415,6 @@ class App extends Component {
             instruction: 'Select your answer before the timer runs out',
             answerScore: 0,
             totalTimeToDeduct: 0,
-          }, () => {
-            // Unselect answers
-            //this.unSelectAnswers();
           });
 
         }, duration);
@@ -417,50 +424,51 @@ class App extends Component {
   // Render stuff
   render() {
     return (
-      <Fade in={this.state.show}>
-        <Wrapper>
-          <SiteHeader>
-            <SiteTitle>
-              {this.state.siteTitle}
-            </SiteTitle>
-            <SiteIntro>
-              {this.state.siteIntro}
-            </SiteIntro>
-            <QuizRound style={{display: this.state.showQuiz ? 'block' : 'none'}}>
-              Question: {this.state.currentPage} of {this.state.questionsTotal}
-            </QuizRound>
-          </SiteHeader>
-          
-          <IntroPage
-            display={this.state.showIntro}
-            content={this.state.pageText}
-            buttonText={this.state.pageButtonText}
-            onClick={this.jumpTo} 
-          />
+      
+      <SiteWrapper>
+        <SiteHeader>
+          <SiteTitle>
+            {this.state.siteTitle}
+          </SiteTitle>
+          <SiteIntro>
+            {this.state.siteIntro}
+          </SiteIntro>
+          <QuizRound style={{display: this.state.showQuiz ? 'inline-block' : 'none'}}>
+            Question: {this.state.currentPage} of {this.state.questionsTotal}
+          </QuizRound>
+        </SiteHeader>
+        
+        <IntroPage
+          display={this.state.showIntro}
+          content={this.state.pageText}
+          buttonText={this.state.pageButtonText}
+          onClick={this.jumpTo} 
+        />
 
-          <Quiz style={{display: this.state.showQuiz ? 'block' : 'none'}}>
-            <Question questionText={this.state.questionText} valueA={this.state.questionValueA} operator={this.state.questionOperator} valueB={this.state.questionValueB} />
-            <AnswerWrap >
-              <AnswerButton answer={this.state.answer1} outcome={this.state.outcome1} onClick={this.jumpTo} />
-              <AnswerButton answer={this.state.answer2} outcome={this.state.outcome2} onClick={this.jumpTo} />
-              <AnswerButton answer={this.state.answer3} outcome={this.state.outcome3} onClick={this.jumpTo} />
-            </AnswerWrap>
+        <Fade in={this.state.show}>
+          <Wrapper>
+            <Quiz style={{display: this.state.showQuiz ? 'block' : 'none'}}>
+              <Question questionText={this.state.questionText} valueA={this.state.questionValueA} operator={this.state.questionOperator} valueB={this.state.questionValueB} />
+              <AnswerWrap >
+                <AnswerButton answer={this.state.answer1} outcome={this.state.outcome1} onClick={this.jumpTo} />
+                <AnswerButton answer={this.state.answer2} outcome={this.state.outcome2} onClick={this.jumpTo} />
+                <AnswerButton answer={this.state.answer3} outcome={this.state.outcome3} onClick={this.jumpTo} />
+              </AnswerWrap>
+              <Timer timerText={this.state.timerText} timerCurrent={this.state.timerCurrent} timerRemaining={this.state.timerRemaining} />
+            </Quiz>
 
-            <Timer timerText={this.state.timerText} timerCurrent={this.state.timerCurrent} timerRemaining={this.state.timerRemaining} />
-
-          </Quiz>
-
-          <ResultsPage
-            display={this.state.showResults}
-            content={this.state.pageText}
-            score={this.state.answerScore}
-            outOf={this.state.questionsTotal}
-            buttonText={this.state.pageButtonText}
-            onClick={this.reset}
-          />
-
-        </Wrapper>
-      </Fade>
+            <ResultsPage
+              display={this.state.showResults}
+              content={this.state.pageText}
+              score={this.state.answerScore}
+              outOf={this.state.questionsTotal}
+              buttonText={this.state.pageButtonText}
+              onClick={this.reset}
+            />
+            </Wrapper>
+        </Fade>
+      </SiteWrapper>
+        
     );
   }
 }
