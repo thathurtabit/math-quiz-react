@@ -138,7 +138,7 @@ class App extends Component {
 
   componentWillUnmount() {
     console.log('componentWillUnmount');
-    clearInterval(this.state.questionTimer._id);
+    clearInterval(this.state.questionTimer);
   }
 
   // Knuth shuffle array
@@ -346,7 +346,7 @@ class App extends Component {
     // Else, results page
     } else {
 
-
+      clearInterval(this.state.questionTimer);
       this.handleSelectedValue(event);
 
        // Transition Out
@@ -354,6 +354,7 @@ class App extends Component {
         this.setState({
           show: !this.state.show,
           timerCurrent: 10,
+          questionTimer: 0,
         });
 
         // Process Results
