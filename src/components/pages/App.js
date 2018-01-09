@@ -116,6 +116,7 @@ class App extends Component {
       outcome3: false,
       answerScore: 0,
       totalTimeToDeduct: 0,
+      questionTimer: 0,
     }
 
     this.jumpTo = this.jumpTo.bind(this);
@@ -133,6 +134,11 @@ class App extends Component {
         show: !this.state.show,
       });
     }, duration);
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    clearInterval(this.state.questionTimer._id);
   }
 
   // Knuth shuffle array
@@ -230,36 +236,42 @@ class App extends Component {
       answer2: answersArray[1],
       answer3: answersArray[2],
     });
-
   }
 
   // Start countdown to next question...
   startCountdown() {
     console.log("COUNTDOWN STARTED");
 
-    let timeLeft = this.state.timerRemaining;
-    let timeCurrent = this.state.timerCurrent;
-
-    const questionTimer = setInterval(() => {
+    clearInterval(this.state.questionTimer);
+    
+      console.log('Interval: ' + this.state.questionTimer);
       
-      timeCurrent = timeCurrent - --timeLeft;
+      // SetState
+      let timeCurrent = this.state.timerCurrent;
+      
+      let questionTimer = setInterval(() => {
+        // Decrement each iteration
+        timeCurrent-=1;
+        // SetState
+        this.setState({
+          timerCurrent: timeCurrent,
+        });
 
-      this.setState({timerCurrent: timeCurrent});
+        // If no answer if given, time out and move on
+        if (timeCurrent <= 0) {
+          this.jumpTo(null);
+        }
+      }, 1000);
 
-      if(timeLeft <= 0)
-        clearInterval(questionTimer);
-    }, 1000);
-
-    setTimeout(() => {
-        
-      console.log("TIME IS UP");
-
-    }, this.state.questionTimeOut); 
+      // SetState - save timer object in state
+      this.setState({questionTimer: questionTimer});
+    
   }
 
 
   handleSelectedValue(event) {
-    let userAnswer = Number(event.currentTarget.value);
+
+    let userAnswer = event ? Number(event.currentTarget.value) : null;
     let addPoint = this.state.answerScore;
     addPoint += 1; //iterate
 
@@ -275,7 +287,7 @@ class App extends Component {
 
  // Next button
   jumpTo(event) {
-
+    
     let currentPage = this.state.currentPage;
     currentPage +=1; // increment
 
@@ -295,6 +307,7 @@ class App extends Component {
             showIntro: !this.state.showIntro,
             showQuiz: !this.state.showQuiz,
             currentPage: currentPage,
+            timerCurrent: 10,
             
           }, () => {
             this.startCountdown();
@@ -321,6 +334,7 @@ class App extends Component {
             // Transition Out
             show: !this.state.show,
             currentPage: currentPage,
+            timerCurrent: 10,
             
           }, () => {
             this.startCountdown();
@@ -339,6 +353,7 @@ class App extends Component {
       setTimeout(() => {
         this.setState({
           show: !this.state.show,
+          timerCurrent: 10,
         });
 
         // Process Results
