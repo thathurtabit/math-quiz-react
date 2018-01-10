@@ -10,7 +10,8 @@ const IntroPageWrap = styled.section`
 `;
 
 const IntroPageContent = styled.article`
-  font-size: 1rem;
+    font-size: 1.9rem;
+    max-width: 600px;
 `;
 
 export default function IntroPage(props) {

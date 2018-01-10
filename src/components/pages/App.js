@@ -8,7 +8,8 @@ import Timer from '../molecules/Timer';
 import ResultsPage from '../organisms/ResultsPage';
 
 const SiteWrapper = styled.section`
-  font-family: 'Montserrat', sans-serif;
+  color: #333;
+  font-family: 'Lora', serif;
   padding: 0;
 `;
 
@@ -27,7 +28,7 @@ const Wrapper = styled.section`
 
   &.fade-enter.fade-enter-active {
     opacity: 1;
-    transition: opacity 300ms ease-out;
+    transition: opacity 400ms ease-out;
     transform: scale(1);
   }
 
@@ -39,7 +40,7 @@ const Wrapper = styled.section`
   &.fade-exit.fade-exit-active {
     opacity: 0.01;
     transform: scale(.98);
-    transition: opacity 350ms ease-in, transform 350ms ease-out;
+    transition: opacity 400ms ease-in, transform 350ms ease-out;
   }
 `;
 
@@ -48,35 +49,64 @@ const Quiz = styled.section`
 `;
 
 const SiteHeader = styled.header`
-  font-size: 1.5rem;
-  left: 50%;
+  font-size: 1rem;
   position: absolute;
   top: 0;
-  text-align: center;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  width: 100%;
 `;
 
 const SiteTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: 1.75rem;
+  left: 50px;
+  margin: 0;
+  position: absolute;
+  top: 46px;
 `;
 
 const AnswerWrap = styled.section`
   font-size: 1rem;
 `;
 
-const SiteIntro = styled.h2`
-  font-size: 1rem;
-`;
-
 const QuizRound = styled.p`
-  border-radius: 20px;
   font-size: 0.75rem;
-  color: #fff;
-  background: rgba(0,0,0,0.2);
-  padding: 5px 10px;
+  font-family: 'Lora', serif;
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  width: 70px;
+
+  &::after {
+    border-bottom: 3px solid #333;
+    content: "";
+    width: 30px;
+    left: 24px;
+    top: 9px;
+    position: absolute;
+    height: 0;
+    transform: rotate(-45deg) translate(-50%,-50%);
+  }
 `;
 
-const duration = 300;
+const RoundNo = styled.span`
+  color: #333;
+  font-size: 1.4rem;
+  font-size: 1.4rem;
+  position: absolute;
+  left: 0;
+  top: -3px;
+`;
+
+const RoundOf = styled.span`
+  bottom: -45px;
+  color: #333;
+  font-size: 1.4rem;
+  position: absolute;
+  right: 10px;
+`;
+
+const duration = 400;
 
 // Fade handler
 const Fade = ({ children, ...props }) => (
@@ -99,9 +129,8 @@ class App extends Component {
       showIntro: true,
       showQuiz: false,
       showResults: false,
-      siteTitle: 'Math Quiz',
-      siteIntro: 'Quick fire math quiz to train your brain',
-      pageText: 'This maths quiz will generate random math questions and give you a limited time to answer them',
+      siteTitle: 'Math.',
+      pageText: 'This site will generate random math questions (some easy, some hard) and give you a limited time to answer them.',
       pageButtonText: 'Start',
       currentPage: 0,
       questionsTotal: 10,
@@ -113,10 +142,9 @@ class App extends Component {
       questionValueMin: 3,
       questionValueMax: 10,
       questionTimeOut: 10000,
-      timerText: 'Time until next question...',
+      timerText: 'Time left until next question...',
       timerCurrent: 10,
       timerRemaining: 10,
-      instruction: 'Select your answer before the timer runs out',
       correctAnswer: 1,
       answer1: 1,
       answer2: 2,
@@ -430,11 +458,12 @@ class App extends Component {
           <SiteTitle>
             {this.state.siteTitle}
           </SiteTitle>
-          <SiteIntro>
+          {/*<SiteIntro>
             {this.state.siteIntro}
-          </SiteIntro>
+          </SiteIntro>*/}
           <QuizRound style={{display: this.state.showQuiz ? 'inline-block' : 'none'}}>
-            Question: {this.state.currentPage} of {this.state.questionsTotal}
+            <RoundNo>{this.state.currentPage}</RoundNo>
+            <RoundOf>{this.state.questionsTotal}</RoundOf>
           </QuizRound>
         </SiteHeader>
         

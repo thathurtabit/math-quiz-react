@@ -13,13 +13,23 @@ const ResultsPageContent = styled.article`
   font-size: 1rem;
 `;
 
+const ResultsPageTextSmall = styled.p`
+  font-size: 1rem;
+`;
+
+const ResultsPageTextLarge = styled.h3`
+  background: rgba(0,0,0,0.05);
+  font-size: 3rem;
+  margin: 0;
+`;
+
 export default function ResultsPage(props) {
 
   return (
     <ResultsPageWrap style={{display: props.display ? 'block' : 'none'}}>
       <ResultsPageContent>
-        <p>{props.content}</p>
-        <p>{props.score} out of {props.outOf}</p>
+        <ResultsPageTextSmall>{props.content}</ResultsPageTextSmall>
+        <ResultsPageTextLarge>{props.score} out of {props.outOf}</ResultsPageTextLarge>
       </ResultsPageContent>
       <NextButton buttonText={props.buttonText} onClick={() => props.onClick()} />
     </ResultsPageWrap>

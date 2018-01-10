@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const QuestionWrap = styled.p`
-  font-size: 2rem;
+  font-size: 3rem;
+  font-family: 'Lora', serif;
   margin: 2rem 1rem 0;
   text-align: center;
 
   span {
-  	background: rgba(0,0,0,0.03);
+  	background: rgba(0,0,0,0.05);
   	padding: 3px 5px;
   }
 `;
