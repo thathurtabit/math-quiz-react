@@ -10,18 +10,18 @@ const TimerWrap = styled.section`
 
 const TimerText = styled.p`
   font-size: 1rem;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
 `;
 
-const ProgressBar = styled.progress`
-  font-size: 1rem;
-`;
 
 export default function Timer(props) {
 
   return (
     <TimerWrap>
-        <TimerText>{props.timerText}</TimerText>
-        <ProgressBar value={props.timerCurrent} max={props.timerRemaining}></ProgressBar>
+        <TimerText>{/*props.timerText*/}</TimerText>
     </TimerWrap>
   );
 }

@@ -18,8 +18,10 @@ export default function IntroPage(props) {
 
   return (
     <IntroPageWrap style={{display: props.display ? 'block' : 'none'}}>
+      
       <IntroPageContent>
-        {props.content}
+        <p>+ - * /</p>
+        <p>{props.content}</p>
       </IntroPageContent>
       <NextButton buttonText={props.buttonText} onClick={props.onClick} />
     </IntroPageWrap>

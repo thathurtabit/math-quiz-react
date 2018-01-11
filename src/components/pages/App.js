@@ -9,8 +9,35 @@ import ResultsPage from '../organisms/ResultsPage';
 
 const SiteWrapper = styled.section`
   color: #333;
-  font-family: 'Lora', serif;
+  font-family: 'Lora',serif;
   padding: 0;
+  position: absolute;
+  background: rgba(0,0,0,0.1);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    background: #222;
+    bottom: 0;
+    content: '';
+    height: 20px;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    width: 100%;
+  }
+
+  &.countdown-started::before {
+    opacity: 1;
+    right: 100%;
+    transition: width 10s linear, right 10s linear;
+    transition-delay: 300ms;
+    width: 0;
+  }
 `;
 
 const Wrapper = styled.section`
@@ -142,6 +169,7 @@ class App extends Component {
       questionValueMin: 3,
       questionValueMax: 10,
       questionTimeOut: 10000,
+      countTransition: false,
       timerText: 'Time left until next question...',
       timerCurrent: 10,
       timerRemaining: 10,
@@ -149,9 +177,6 @@ class App extends Component {
       answer1: 1,
       answer2: 2,
       answer3: 3,
-      outcome1: false,
-      outcome2: false,
-      outcome3: false,
       answerScore: 0,
       totalTimeToDeduct: 0,
       questionTimer: 0,
@@ -280,6 +305,9 @@ class App extends Component {
   startCountdown() {
     console.log("COUNTDOWN STARTED");
 
+    // Set timer transition class
+    this.setState({countTransition: true});
+      
     clearInterval(this.state.questionTimer);
     
       console.log('Interval: ' + this.state.questionTimer);
@@ -298,14 +326,14 @@ class App extends Component {
         // If no answer if given, time out and move on
         if (timeCurrent <= 0) {
           this.jumpTo(null);
+          // Reset timer transition class
+          this.setState({countTransition: false});
         }
       }, 1000);
 
       // SetState - save timer object in state
       this.setState({questionTimer: questionTimer});
-    
   }
-
 
   handleSelectedValue(event) {
 
@@ -326,6 +354,9 @@ class App extends Component {
  // Next button
   jumpTo(event) {
     
+    // Set timer transition class
+    this.setState({countTransition: false});
+
     let currentPage = this.state.currentPage;
     currentPage +=1; // increment
 
@@ -372,6 +403,7 @@ class App extends Component {
             // Transition Out
             show: !this.state.show,
             currentPage: currentPage,
+            countTransition: true,
             timerCurrent: 10,
             
           }, () => {
@@ -393,6 +425,7 @@ class App extends Component {
           show: !this.state.show,
           timerCurrent: 10,
           questionTimer: 0,
+          countTransition: false,
         });
 
         // Process Results
@@ -453,7 +486,7 @@ class App extends Component {
   render() {
     return (
       
-      <SiteWrapper>
+      <SiteWrapper  className={this.state.countTransition ? 'countdown-started' : ''}>
         <SiteHeader>
           <SiteTitle>
             {this.state.siteTitle}
