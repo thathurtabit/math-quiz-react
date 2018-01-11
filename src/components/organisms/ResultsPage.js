@@ -11,6 +11,14 @@ const ResultsPageWrap = styled.section`
 
 const ResultsPageContent = styled.article`
   font-size: 1rem;
+
+  @media (min-width: 600px) {
+    font-size: 1.4rem;
+  }
+
+  @media (min-width: 900px) {
+    font-size: 1.9rem;
+  }
 `;
 
 const ResultsPageTextSmall = styled.p`
@@ -19,17 +27,43 @@ const ResultsPageTextSmall = styled.p`
 
 const ResultsPageTextLarge = styled.h3`
   background: rgba(0,0,0,0.05);
-  font-size: 3rem;
+  font-size: 1.5rem;
   margin: 0;
+
+    @media (min-width: 600px) {
+      font-size: 2rem;
+    }
+
+    @media (min-width: 900px) {
+      font-size: 3rem;
+    }
 `;
 
+
 export default function ResultsPage(props) {
+  function setResultComment(score) {
+    let resultComment;
+    if (score <=3) {
+      resultComment = "Ouch, try not to beat yourself up too much.";
+      return resultComment;
+    } else if (score >=4 && score <= 7) {
+      resultComment = "Not too bad, but room for improvement.";
+      return resultComment;
+    } else if (score >= 8 && score <=9) {
+      resultComment = "Pretty good! But not quite a perfect score.";
+      return resultComment;
+    } else {
+      resultComment = "Perfect! Well done you. Perhaps you'll get harder questions next time.";
+      return resultComment;
+    }
+  }
 
   return (
     <ResultsPageWrap style={{display: props.display ? 'block' : 'none'}}>
       <ResultsPageContent>
         <ResultsPageTextSmall>{props.content}</ResultsPageTextSmall>
         <ResultsPageTextLarge>{props.score} out of {props.outOf}</ResultsPageTextLarge>
+        <ResultsPageTextSmall>{setResultComment(props.score)}</ResultsPageTextSmall>
       </ResultsPageContent>
       <NextButton buttonText={props.buttonText} onClick={() => props.onClick()} />
     </ResultsPageWrap>

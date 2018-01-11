@@ -21,7 +21,7 @@ const SiteWrapper = styled.section`
   justify-content: center;
 
   &::before {
-    background: #222;
+    background: #333;
     bottom: 0;
     content: '';
     height: 20px;
@@ -468,13 +468,12 @@ class App extends Component {
             showIntro: true,
             showQuiz: false,
             showResults: false,
-            siteIntro: 'Quick fire math quiz to train your brain',
-            pageText: 'This maths quiz will generate random math questions and give you a limited time to answer them',
             pageButtonText: 'Start',
             currentPage: 0,
             questionText: 'What is...',
             instruction: 'Select your answer before the timer runs out',
             answerScore: 0,
+            pageText: 'This site will generate random math questions (some easy, some hard) and give you a limited time to answer them.',
             totalTimeToDeduct: 0,
           });
 

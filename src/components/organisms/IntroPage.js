@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import MathCharacters from '../atoms/MathCharacters';
 import NextButton from '../atoms/NextButton';
 import PropTypes from 'prop-types';
 
@@ -10,8 +11,16 @@ const IntroPageWrap = styled.section`
 `;
 
 const IntroPageContent = styled.article`
+  font-size: 1.1rem;
+  max-width: 600px;
+
+  @media (min-width: 600px) {
+    font-size: 1.4rem;
+  }
+
+  @media (min-width: 900px) {
     font-size: 1.9rem;
-    max-width: 600px;
+  }
 `;
 
 export default function IntroPage(props) {
@@ -20,7 +29,7 @@ export default function IntroPage(props) {
     <IntroPageWrap style={{display: props.display ? 'block' : 'none'}}>
       
       <IntroPageContent>
-        <p>+ - * /</p>
+        <MathCharacters />
         <p>{props.content}</p>
       </IntroPageContent>
       <NextButton buttonText={props.buttonText} onClick={props.onClick} />
