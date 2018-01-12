@@ -8,17 +8,18 @@ import Timer from '../molecules/Timer';
 import ResultsPage from '../organisms/ResultsPage';
 
 const SiteWrapper = styled.section`
+  align-items: center;
+  bottom: 0;
   color: #333;
-  font-family: 'Lora',serif;
-  padding: 0;
-  position: absolute;
-  background: rgba(0,0,0,0.1);
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  font-family: 'Lora',serif;
+  height: 100vh;
   justify-content: center;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100vw;
 
   &::before {
     background: #333;
@@ -34,8 +35,7 @@ const SiteWrapper = styled.section`
   &.countdown-started::before {
     opacity: 1;
     right: 100%;
-    transition: width 10s linear, right 10s linear;
-    transition-delay: 300ms;
+    transition: width 9.95s linear, right 9.95s linear;
     width: 0;
   }
 `;
@@ -227,8 +227,7 @@ class App extends Component {
   // Check for duplicate answers
   checkForDuplicates(lastAnswer, number) {
     const getRandomInt = (minVal, maxVal) => Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-    let tweakVal = getRandomInt(1,3);
-    console.log(tweakVal);
+    let tweakVal = getRandomInt(1,4);
     if (lastAnswer !== number) {
       return number;
     } else {
@@ -262,7 +261,7 @@ class App extends Component {
     let operator = this.state.questionOperator;
     let valueB = this.state.questionValueB;
     let minVal = 1;
-    let maxVal = 5;
+    let maxVal = 10;
     let answersArray = [];
     // Required because the operator is currently a string
     let operatorFunctions = {
