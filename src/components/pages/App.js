@@ -199,6 +199,7 @@ class App extends Component {
     }, duration);
   }
 
+  // Clean up
   componentWillUnmount() {
     console.log('componentWillUnmount');
     clearInterval(this.state.questionTimer);
@@ -224,15 +225,29 @@ class App extends Component {
     return array;
   }
 
-  // Check for duplicate answers
-  checkForDuplicates(lastAnswer, number) {
-    const getRandomInt = (minVal, maxVal) => Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
-    let tweakVal = getRandomInt(1,4);
-    if (lastAnswer !== number) {
-      return number;
+  // Check for duplicate value in inital answers and nudge
+  checkForDuplicates(val1, val2) {
+    console.log(`Checking for duplicates between: ${val1} & ${val2}`);
+    if (val1 !== val2) {
+      return val2;
     } else {
-      return number + tweakVal;
+      return val2 + 1;
     }
+  }
+
+  // Check for duplicate answers in answers Array
+  checkForDuplicatesInArray(answersArr) {
+    let ans1 = answersArr[0];
+    let ans2 = answersArr[1];
+    let ans3 = answersArr[2];
+
+    if (ans2 === ans1) {
+      answersArr[1] += 1;
+    }
+    if (ans3 === ans2 || ans3 === ans1) {
+      answersArr[2] += 1;
+    }
+    console.log(`Post duplicate: ${answersArr}`);
   };
 
   generateQuestionValues(event) {
@@ -244,6 +259,8 @@ class App extends Component {
     let valueA = getRandomInt(minQuestionVal, maxQuestionVal);
     let valueB = this.checkForDuplicates(valueA, getRandomInt(minQuestionVal, maxQuestionVal));
     let operator = getRandomOperator(operatorsArray);
+
+    console.log(`Post question values: ${valueA} ${operator} ${valueB}`);
 
     // Set those values
     this.setState({
@@ -261,35 +278,45 @@ class App extends Component {
     let operator = this.state.questionOperator;
     let valueB = this.state.questionValueB;
     let minVal = 1;
-    let maxVal = 10;
+    let maxVal = 5;
     let answersArray = [];
     // Required because the operator is currently a string
     let operatorFunctions = {
       '+': (a, b) => (a + b),
       '-': (a, b) => (a - b),
-      '/': (a, b) => (a / b).toFixed(2),
+      '/': (a, b) => (a / b),
       '*': (a, b) => (a * b),
     };
 
-    // Check they're not the same values
+    // Answer is correct, but generate other values close to it...
     let answer1 = operatorFunctions[operator](valueA, valueB);
-    let answer2 = this.checkForDuplicates(answer1, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueB));
-    let answer3 = this.checkForDuplicates(answer2, operatorFunctions[operator](getRandomInt(minVal, maxVal), valueA));
+    let answer2 = operatorFunctions[operator](answer1, getRandomInt(minVal, maxVal));
+    let answer3 = operatorFunctions[operator](answer1, getRandomInt(minVal, maxVal));
 
     // Push the answers to an array so we can shuffle
     answersArray.push(answer1, answer2, answer3);
 
+    console.log(`Pre duplicate: ${answersArray}`);
+
+    //check if any of the answers have decimal points
+    answersArray.forEach((answer, index) => {
+
+      console.log(`Pre decimal: ${answersArray}`);
+      // Check if the number is decimal
+      if(answer % 1 !== 0) {
+        // splice[remove, how many to remove, replace with]
+        answer.toFixed(2);
+        answersArray.splice(index, 1, answer);
+
+        console.log(`Post decimal: ${answersArray}`);
+      }
+    });
+
+    // Check for duplicates and nudge them
+    this.checkForDuplicatesInArray(answersArray);
+
     // Shuffle that array
     this.shuffleArray(answersArray);
-
-    // Loop and shorten the values if they're recurring, i.e. 1.5555555555...
-
-    for (let i = 0; i < answersArray.length; i++) {
-      if (!Number.isInteger(answersArray[i])) {
-        console.log(`isInteger: ${answersArray[i]}`);
-        answersArray[i] = parseFloat(answersArray[i]).toFixed(2);
-      }
-    }
 
     // Set those values
     this.setState({
@@ -489,9 +516,6 @@ class App extends Component {
           <SiteTitle>
             {this.state.siteTitle}
           </SiteTitle>
-          {/*<SiteIntro>
-            {this.state.siteIntro}
-          </SiteIntro>*/}
           <QuizRound style={{display: this.state.showQuiz ? 'inline-block' : 'none'}}>
             <RoundNo>{this.state.currentPage}</RoundNo>
             <RoundOf>{this.state.questionsTotal}</RoundOf>
