@@ -20,24 +20,6 @@ const SiteWrapper = styled.section`
   position: absolute;
   top: 0;
   width: 100vw;
-
-  &::before {
-    background: #333;
-    bottom: 0;
-    content: '';
-    height: 20px;
-    opacity: 0;
-    position: absolute;
-    right: 0;
-    width: 100%;
-  }
-
-  &.countdown-started::before {
-    opacity: 1;
-    right: 100%;
-    transition: width 9.95s linear, right 9.95s linear;
-    width: 0;
-  }
 `;
 
 const Wrapper = styled.section`
@@ -201,7 +183,6 @@ class App extends Component {
 
   // Clean up
   componentWillUnmount() {
-    console.log('componentWillUnmount');
     clearInterval(this.state.questionTimer);
   }
 
@@ -227,7 +208,6 @@ class App extends Component {
 
   // Check for duplicate value in inital answers and nudge
   checkForDuplicates(val1, val2) {
-    console.log(`Checking for duplicates between: ${val1} & ${val2}`);
     if (val1 !== val2) {
       return val2;
     } else {
@@ -242,12 +222,13 @@ class App extends Component {
     let ans3 = answersArr[2];
 
     if (ans2 === ans1) {
-      answersArr[1] += 1;
+      answersArr[1] = parseInt((ans1 + 1), 10);
     }
     if (ans3 === ans2 || ans3 === ans1) {
-      answersArr[2] += 1;
+      answersArr[2] = parseInt((ans2 + 2), 10);
     }
-    console.log(`Post duplicate: ${answersArr}`);
+
+    console.log(`After checkForDuplicates: ${answersArr} | Type of a: ${typeof(answersArr[1])} - Type of b: ${typeof(answersArr[2])}`);
   };
 
   generateQuestionValues(event) {
@@ -259,8 +240,6 @@ class App extends Component {
     let valueA = getRandomInt(minQuestionVal, maxQuestionVal);
     let valueB = this.checkForDuplicates(valueA, getRandomInt(minQuestionVal, maxQuestionVal));
     let operator = getRandomOperator(operatorsArray);
-
-    console.log(`Post question values: ${valueA} ${operator} ${valueB}`);
 
     // Set those values
     this.setState({
@@ -289,28 +268,29 @@ class App extends Component {
     };
 
     // Answer is correct, but generate other values close to it...
-    let answer1 = operatorFunctions[operator](valueA, valueB);
+    let answer1raw = operatorFunctions[operator](valueA, valueB);
+    // If answer1raw produces a decimal...
+    if (answer1raw % 1 !== 0) {
+       answer1raw = Number.parseFloat(answer1raw).toFixed(1);
+    }
+    let answer1 = answer1raw;
     let answer2 = operatorFunctions[operator](answer1, getRandomInt(minVal, maxVal));
     let answer3 = operatorFunctions[operator](answer1, getRandomInt(minVal, maxVal));
 
     // Push the answers to an array so we can shuffle
     answersArray.push(answer1, answer2, answer3);
 
-    console.log(`Pre duplicate: ${answersArray}`);
-
+    // console.log(`Before decimal check: ${answersArray}`);
     //check if any of the answers have decimal points
     answersArray.forEach((answer, index) => {
-
-      console.log(`Pre decimal: ${answersArray}`);
       // Check if the number is decimal
       if(answer % 1 !== 0) {
+        let decimalTidyAnswer = Number.parseFloat(answer).toFixed(1);
         // splice[remove, how many to remove, replace with]
-        answer.toFixed(2);
-        answersArray.splice(index, 1, answer);
-
-        console.log(`Post decimal: ${answersArray}`);
+        answersArray.splice(index, 1, decimalTidyAnswer);
       }
     });
+    // console.log(`After decimal check: ${answersArray}`); 
 
     // Check for duplicates and nudge them
     this.checkForDuplicatesInArray(answersArray);
@@ -324,19 +304,15 @@ class App extends Component {
       answer1: answersArray[0],
       answer2: answersArray[1],
       answer3: answersArray[2],
+    }, () => {
+      console.log(`Correct: ${this.state.correctAnswer} | AnswerA: ${answersArray[0]} | AnswerB: ${answersArray[1]} | AnswerC: ${answersArray[2]} `);
     });
   }
 
   // Start countdown to next question...
   startCountdown() {
-    console.log("COUNTDOWN STARTED");
-
-    // Set timer transition class
-    this.setState({countTransition: true});
       
     clearInterval(this.state.questionTimer);
-    
-      console.log('Interval: ' + this.state.questionTimer);
       
       // SetState
       let timeCurrent = this.state.timerCurrent;
@@ -352,8 +328,6 @@ class App extends Component {
         // If no answer if given, time out and move on
         if (timeCurrent <= 0) {
           this.jumpTo(null);
-          // Reset timer transition class
-          this.setState({countTransition: false});
         }
       }, 1000);
 
@@ -367,21 +341,17 @@ class App extends Component {
     let addPoint = this.state.answerScore;
     addPoint += 1; //iterate
 
-    console.log(`User's last answer was: ${userAnswer} : ${typeof(userAnswer)} | Actual answer was: ${this.state.correctAnswer} : ${typeof(this.state.correctAnswer)}`);
-
     if (userAnswer === Number(this.state.correctAnswer)) {
-      console.log('DIRECT HIT');
       this.setState({
         answerScore: addPoint,
+        countTransition: false,
       });
+      console.log('Correctamundo!');
     }
   }
 
  // Next button
   jumpTo(event) {
-    
-    // Set timer transition class
-    this.setState({countTransition: false});
 
     let currentPage = this.state.currentPage;
     currentPage +=1; // increment
@@ -391,7 +361,10 @@ class App extends Component {
 
       // Transition Out
       setTimeout(() => {
-        this.setState({ show: !this.state.show });
+        this.setState({
+          show: !this.state.show,
+          countTransition: false
+      });
 
         // Transition In
         setTimeout(() => {
@@ -406,6 +379,10 @@ class App extends Component {
             
           }, () => {
             this.startCountdown();
+            // Delay because of parent display: block stopping the transtion
+            setTimeout(()=>{
+              this.setState({countTransition: true,});
+            }, 1);
           });
 
         }, duration);
@@ -418,7 +395,10 @@ class App extends Component {
     
     // Transition Out
       setTimeout(() => {
-        this.setState({ show: !this.state.show });
+        this.setState({
+          show: !this.state.show, 
+          countTransition: false,
+       });
         // Transition In
         setTimeout(() => {
 
@@ -477,8 +457,6 @@ class App extends Component {
   // Reset everything
   reset() {
 
-    console.log('RESET');
-
      // Transition Out
       setTimeout(() => {
         this.setState({ show: !this.state.show });
@@ -495,6 +473,7 @@ class App extends Component {
             showQuiz: false,
             showResults: false,
             pageButtonText: 'Start',
+            countTransition: false,
             currentPage: 0,
             questionText: 'What is...',
             instruction: 'Select your answer before the timer runs out',
@@ -511,7 +490,7 @@ class App extends Component {
   render() {
     return (
       
-      <SiteWrapper  className={this.state.countTransition ? 'countdown-started' : ''}>
+      <SiteWrapper>
         <SiteHeader>
           <SiteTitle>
             {this.state.siteTitle}
@@ -538,7 +517,7 @@ class App extends Component {
                 <AnswerButton answer={this.state.answer2} outcome={this.state.outcome2} onClick={this.jumpTo} />
                 <AnswerButton answer={this.state.answer3} outcome={this.state.outcome3} onClick={this.jumpTo} />
               </AnswerWrap>
-              <Timer timerText={this.state.timerText} timerCurrent={this.state.timerCurrent} timerRemaining={this.state.timerRemaining} />
+              <Timer displayProp={this.state.countTransition ? 'countdown-started' : ''} />
             </Quiz>
 
             <ResultsPage
