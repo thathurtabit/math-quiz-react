@@ -4,8 +4,16 @@ import PropTypes from 'prop-types';
 
 const TimerWrap = styled.section`
   font-size: 1rem;
-  margin: 4rem 1rem 0;
+  left: 50%;
+  margin: 3rem 0 0;
+  position: absolute;
   text-align: center;
+  transform: translate(-50%);
+  width: 150px;
+
+  @media (min-width: 600px) {
+    margin: 4rem 0 0;
+  }
 
   &::before,
   &::after {
